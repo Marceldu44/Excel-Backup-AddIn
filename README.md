@@ -6,5 +6,3 @@
 
 #Backup management
 
-Contributors
-
