@@ -1,31 +1,31 @@
-Attribute VB_Name = "Module1"
+Attribute VB_Name = "ManageBackup"
 Option Explicit
 
 Sub prueba()
 
-Dim fList As String
-Dim fName As String
-Dim sExt As String
-Dim sFil As String
-Dim sFile As String
-Dim sDirection As String
-Dim sPath As String
-sFil = ActiveWorkbook.Name
-sFile = VBA.Mid(sFil, 1, VBA.InStr(sFil, ".x") - 1)
-sExt = VBA.Right(sFil, Len(sFil) - WorksheetFunction.Find(".", sFil) + 1)
-sDirection = ActiveWorkbook.Path & "\Backup " & sFile & "\"
-sPath = sDirection & "*" & sExt
-fName = Dir(sPath)
-' The variable fName now contains the name of the files within the specified path.
-Do While fName <> ""
-' Store the current file in the string fList.
-fList = fList & vbNewLine & fName
-' Get the next files in the specified path.
-fName = Dir()
-' The variable fName now contains the name of the next files in the specified path.
-Loop
-' Display the list of files in a message box.
-MsgBox ("List of Files:" & fList)
+  Dim fList As String
+  Dim fName As String
+  Dim sExt As String
+  Dim sFil As String
+  Dim sFile As String
+  Dim sDirection As String
+  Dim sPath As String
+  sFil = ActiveWorkbook.Name
+  sFile = VBA.Mid(sFil, 1, VBA.InStr(sFil, ".x") - 1)
+  sExt = VBA.Right(sFil, Len(sFil) - WorksheetFunction.Find(".", sFil) + 1)
+  sDirection = ActiveWorkbook.Path & "\Backup " & sFile & "\"
+  sPath = sDirection & "*" & sExt
+  fName = Dir(sPath)
+  ' The variable fName now contains the name of the files within the specified path.
+  Do While fName <> ""
+    ' Store the current file in the string fList.
+    fList = fList & vbNewLine & fName
+    ' Get the next files in the specified path.
+    fName = Dir()
+    ' The variable fName now contains the name of the next files in the specified path.
+  Loop
+  ' Display the list of files in a message box.
+  MsgBox ("List of Files:" & fList)
 
 End Sub
 
@@ -113,18 +113,18 @@ Function fileArray(sFolder As String) As String()
     Dim fso As Object, dirFolder, files, file
     Dim arraySize As Integer
     Dim testArray() As String
-    
+
     Set fso = CreateObject("scripting.filesystemobject")
     Set dirFolder = fso.GetFolder(sFolder)
     Set files = dirFolder.files
-    
+
     arraySize = 0
-    
+
     For Each file In files
         arraySize = arraySize + 1
         ReDim testArray(arraySize)
     Next
-    
+
     arraySize = 0
     For Each file In files
         arraySize = arraySize + 1
@@ -156,4 +156,3 @@ var1 = FileName(sFil)
 MsgBox var1
 
 End Sub
-
