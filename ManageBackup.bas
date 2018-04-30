@@ -8,7 +8,6 @@ Dim sFile As String
 Dim sDirection As String
 Dim NameFile As String
 
-  Dim sFile As String
 Sub VarVal()
 
     sFil = ActiveWorkbook.Name
