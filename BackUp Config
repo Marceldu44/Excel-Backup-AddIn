@@ -1,0 +1,35 @@
+Option Explicit
+
+
+Private Sub CommandButton1_Click()
+
+    Dim conf As String
+    Dim anPath As String
+    conf = ComboBox1.Value
+    anPath = TextBox1
+    MsgBox conf
+    MsgBox anPath
+    
+
+End Sub
+
+Private Sub TextBox1_Change()
+
+End Sub
+
+Private Sub UserForm_Initialize()
+
+    ComboBox1.AddItem "Documents"
+    ComboBox1.AddItem "Beside this workbook"
+    ComboBox1.AddItem "Desktop"
+    ComboBox1.AddItem "Another"
+    'If ComboBox1. =  Then TextBox1.Enabled = True
+    
+End Sub
+            
+Private Sub ListBox1_Click()
+
+    
+
+End Sub
+
