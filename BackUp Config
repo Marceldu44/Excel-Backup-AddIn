@@ -39,14 +39,6 @@ Private Sub cbttOk_Click()
     Dim confPath As String
     Dim DateConf As String
     Dim ExtConf As String
-        If cmbPath.Enabled = True And cmbPath.Value = "" Then GoTo BlankSpace
-        If cmbPath.Enabled = True And cmbPath.Value <> "" Then confPath = cmbPath.Value
-        If textOther.Enabled = True And textOther.Value = "" Then GoTo BlankSpace
-        If textOther.Enabled = True And textOther.Value <> "" Then confPath = textOther.Value
-        If cmbDate.Enabled = True And cmbDate.Value = "" Then GoTo BlankSpace
-        If cmbDate.Enabled = True And cmbDate.Value <> "" Then DateConf = cmbDate.Value
-        If cmbExt.Value = "" Then GoTo BlankSpace
-        If cmbExt.Value <> "" Then ExtConf = cmbExt.Value
         
 BlankSpace:
     MsgBox "You have leave an information space in blank or have enter an invalid value!"
