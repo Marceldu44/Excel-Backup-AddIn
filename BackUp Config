@@ -39,39 +39,18 @@ Private Sub cbttOk_Click()
     Dim confPath As String
     Dim DateConf As String
     Dim ExtConf As String
-    Select Case ufrmConfig
-        Case ufrmConfig.cmbPath.Enabled = True
-            If cmbPath.Value = "" Then
-                MsgBox "Select a Path"
-                'code for reboot
-            Else
-                confPath = cmbPath.Value
-            End If
-        Case ufrmConfig.textOther.Enabled = True
-            If textOther.Value = "" Then
-                MsgBox "Insert a Valid Path"
-                'code for reboot
-            Else
-                confPath = textOther.Value
-            End If
-        Case ufrmConfig.cmbDate.Enabled = True
-            If cmbDate.Value = "" Then
-                MsgBox "Select a Date Format"
-                'code for reboot
-            Else
-                DateConf = cmbDate.Value
-            End If
-        Case ufrmConfig.cmbExt.Enabled = True
-            If cmbExt.Value = "" Then
-                MsgBox "Select an Extension"
-                'code for reboot
-            Else
-                ExtConf = cmbDate.Value
-            End If
-        Case ufrmConfig.chkbValue.Value = True
-            'code for saving the selected values
-        End Select
-                    
+        If cmbPath.Enabled = True And cmbPath.Value = "" Then GoTo BlankSpace
+        If cmbPath.Enabled = True And cmbPath.Value <> "" Then confPath = cmbPath.Value
+        If textOther.Enabled = True And textOther.Value = "" Then GoTo BlankSpace
+        If textOther.Enabled = True And textOther.Value <> "" Then confPath = textOther.Value
+        If cmbDate.Enabled = True And cmbDate.Value = "" Then GoTo BlankSpace
+        If cmbDate.Enabled = True And cmbDate.Value <> "" Then DateConf = cmbDate.Value
+        If cmbExt.Value = "" Then GoTo BlankSpace
+        If cmbExt.Value <> "" Then ExtConf = cmbExt.Value
+        
+BlankSpace:
+    MsgBox "You have leave an information space in blank or have enter an invalid value!"
+    
 
 End Sub
 
@@ -115,6 +94,7 @@ Private Sub UserForm_Initialize()
     cmbDate.Enabled = False
     
 End Sub
+
 
 
 
