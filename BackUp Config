@@ -35,7 +35,7 @@ Private Sub cbttCancel_Click()
 
 End Sub
 
-Private Sub cbttOk_Click()
+Public Sub cbttOk_Click()
     Dim confPath As String
     Dim DateConf As String
     Dim ExtConf As String
@@ -70,11 +70,16 @@ Private Sub cbttOk_Click()
         Else
             ExtConf = cmbExt.Value
         End If
-    Dim z
-    SaveSetting "MyApp", "Startup", "Top", 90
-    z = GetSetting("MyApp", "Startup", "Top")
+    'MsgBox cboxValues.Value
+    Dim DefaultVar As Boolean
+    If cboxValues.Value = True Then
+        SaveControls
+        DefaultVar = True
+    Else
+        DefaultVar = False
+    End If
     Unload ufrmConfig
-
+    
 BlankSpace:
     If x <> 0 Then
         MsgBox "You have leave an information space in blank or have enter an invalid value!"
@@ -82,6 +87,11 @@ BlankSpace:
     End If
 
 End Sub
+
+Private Sub cboxValues_Click()
+       
+End Sub
+
 Private Sub UserForm_Initialize()
     cmbPath.AddItem "Documents"
     cmbPath.AddItem "Beside this workbook"
@@ -119,38 +129,34 @@ Private Sub UserForm_Initialize()
     textOther.Enabled = False
     lblOther.Enabled = False
     cmbDate.Enabled = False
-
-
-End Sub
-
-Private Sub UserForm_Terminate()
-'Save controls
-Dim x
-SaveSetting "MyApp", "Startup", "Top", 90
-x = GetSetting("MyApp", "Startup", "Top")
+    ReadControls
 
 End Sub
 
-Private Sub ReadControls()
-cmbPath.Text = GetSetting("CodeForPublish", "ufrmConfig", "cmbPath")
-cboxOtherPath = False
-If GetSetting("CodeForPublish", "ufrmConfig", "cboxOtherPath") Then cboxOtherPath = True
-textOther = GetSetting("CodeForPublish", "ufrmConfig", "textOther")
-cboxDate = False
-If GetSetting("CodeForPublish", "ufrmConfig", "cboxDate") Then cboxDate = True
-cmbDate.Text = GetSetting("CodeForPublish", "ufrmConfig", "cmbDate")
-cmbExt.Text = GetSetting("CodeForPublish", "ufrmConfig", "cmbExt")
+Private Sub ReadControls(): On Error Resume Next
+
+    cmbPath.Text = GetSetting("Backup Management", "ufrmConfig", "cmbPath")
+    cboxOtherPath = False
+    If GetSetting("Backup Management", "ufrmConfig", "cboxOtherPath") Then cboxOtherPath = True
+    textOther = GetSetting("Backup Management", "ufrmConfig", "textOther")
+    cboxDate = False
+    If GetSetting("Backup Management", "ufrmConfig", "cboxDate") Then cboxDate = True
+    cmbDate.Text = GetSetting("Backup Management", "ufrmConfig", "cmbDate")
+    cmbExt.Text = GetSetting("Backup Management", "ufrmConfig", "cmbExt")
+    
 End Sub
 
 Private Sub SaveControls()
-SaveSetting "CodeForPublish", "ufrmConfig", "cmbPath", cmbPath.Text
-SaveSetting "CodeForPublish", "ufrmConfig", "cboxOtherPath", False
-If cboxOtherPath = True Then SaveSetting "CodeForPublish", "ufrmConfig", "cboxOtherPath", True
-SaveSetting "CodeForPublish", "ufrmConfig", "textOther", textOther.Text
-SaveSetting "CodeForPublish", "ufrmConfig", "cboxDate", False
-If cboxDate = True Then SaveSetting "CodeForPublish", "ufrmConfig", "cboxDate", True
-SaveSetting "CodeForPublish", "ufrmConfig", "cmbDate", cmbDate.Text
-SaveSetting "CodeForPublish", "ufrmConfig", "cmbExt", cmbExt.Text
+
+    SaveSetting "Backup Management", "ufrmConfig", "cmbPath", cmbPath.Text
+    SaveSetting "Backup Management", "ufrmConfig", "cboxOtherPath", False
+    If cboxOtherPath = True Then SaveSetting "Backup Management", "ufrmConfig", "cboxOtherPath", True
+    SaveSetting "Backup Management", "ufrmConfig", "textOther", textOther.Text
+    SaveSetting "Backup Management", "ufrmConfig", "cboxDate", False
+    If cboxDate = True Then SaveSetting "Backup Management", "ufrmConfig", "cboxDate", True
+    SaveSetting "Backup Management", "ufrmConfig", "cmbDate", cmbDate.Text
+    SaveSetting "Backup Management", "ufrmConfig", "cmbExt", cmbExt.Text
+
 End Sub
 
 
