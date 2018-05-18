@@ -1,5 +1,163 @@
-Attribute VB_Name = "Módulo1"
+Attribute VB_Name = "MÃ³dulo1"
 Option Explicit
+
+Private Sub cboxDate_Click()
+
+    If cboxDate.Value = True Then
+        cmbDate.Enabled = True
+    Else
+        cmbDate.Enabled = False
+        cmbDate.Value = ""
+    End If
+
+End Sub
+
+Private Sub cboxOtherPath_Click()
+
+    If cboxOtherPath.Value = True Then
+        textOther.Enabled = True
+        cmbPath.Enabled = False
+        cmbPath.Value = ""
+        lblPath.Enabled = False
+        lblOther.Enabled = True
+    Else
+        textOther.Enabled = False
+        textOther.Value = ""
+        cmbPath.Enabled = True
+        lblPath.Enabled = True
+        lblOther.Enabled = False
+    End If
+    
+End Sub
+
+Private Sub cbttCancel_Click()
+
+   Unload ufrmConfig
+
+End Sub
+
+Public Sub cbttOk_Click()
+
+    Dim ConfPath As String
+    Dim DateConf As String
+    Dim ExtConf As String
+    Dim x As Integer
+    On Error GoTo BlankSpace
+        If Not cmbPath.Enabled = False Then
+            If cmbPath.Value = "" Then
+                x = 1
+                GoTo BlankSpace
+            Else
+                ConfPath = cmbPath.Value
+            End If
+        End If
+        If Not textOther.Enabled = False Then
+            If textOther.Value = "" Then
+                x = 1
+                GoTo BlankSpace
+            Else
+                ConfPath = textOther.Value
+            End If
+        End If
+        If Not cmbDate.Enabled = False Then
+            If cmbDate.Value = "" Then
+                x = 1
+                GoTo BlankSpace
+            Else
+                DateConf = cmbDate.Value
+            End If
+        End If
+    If cboxValues.Value = True Then
+        BackupConfigurated
+        SaveControls
+    End If
+    End
+
+BlankSpace:
+    If x <> 0 Then
+        MsgBox "You have leave an information space in blank or have enter an invalid value!"
+        x = 0
+    End If
+
+End Sub
+
+
+Private Sub UserForm_Initialize()
+
+    cmbPath.AddItem "Documents"
+    cmbPath.AddItem "Beside this workbook"
+    cmbPath.AddItem "Desktop"
+    cmbDate.AddItem "Date and Time"
+    cmbDate.AddItem "Only Date"
+    cmbDate.AddItem "Only Time"
+    textOther.Enabled = False
+    lblOther.Enabled = False
+    cmbDate.Enabled = False
+    ReadControls
+    If cmbPath.Value <> "" Or textOther.Value <> "" Then
+        BackupConfigurated
+        End
+    End If
+    
+End Sub
+
+Sub SaveControls()
+    
+    Dim var1 As String
+    var1 = ActiveWorkbook.CodeName
+    If cmbPath.Value <> "" Or textOther.Value <> "" Then
+        DeleteControls
+    End If
+    SaveSetting var1, "ufrmConfig", "cmbPath", cmbPath.Text
+    SaveSetting var1, "ufrmConfig", "cboxOtherPath", False
+    If cboxOtherPath = True Then SaveSetting var1, "ufrmConfig", "cboxOtherPath", False
+    SaveSetting var1, "ufrmConfig", "textOther", textOther.Text
+    SaveSetting var1, "ufrmConfig", "cboxDate", False
+    If cboxDate = True Then SaveSetting var1, "ufrmConfig", "cboxDate", False
+    SaveSetting var1, "ufrmConfig", "cmbDate", cmbDate.Text
+
+End Sub
+
+Sub ReadControls(): On Error Resume Next
+
+    Dim var1 As String
+    var1 = ActiveWorkbook.CodeName
+    cmbPath.Text = GetSetting(var1, "ufrmConfig", "cmbPath")
+    cboxOtherPath = False
+    If GetSetting(var1, "ufrmConfig", "cboxOtherPath") Then cboxOtherPath = True
+    textOther = GetSetting(var1, "ufrmConfig", "textOther")
+    cboxDate = False
+    If GetSetting(var1, "ufrmConfig", "cboxDate") Then cboxDate = True
+    cmbDate.Text = GetSetting(var1, "ufrmConfig", "cmbDate")
+    
+End Sub
+
+Sub DeleteControls()
+
+    Dim ConfPath As String
+    Dim ConfPath2 As String
+    Dim OtherPath As String
+    Dim DateConf As String
+    Dim ExtConf As String
+    Dim ClicDate As String
+    Dim var1 As String
+    var1 = ActiveWorkbook.CodeName
+    ConfPath = GetSetting(var1, "ufrmConfig", "cmbPath")
+    If ConfPath <> "" Then DeleteSetting var1, "ufrmConfig", "cmbPath"
+    OtherPath = GetSetting(var1, "ufrmConfig", "cboxOtherPath")
+    If OtherPath = True Then DeleteSetting var1, "ufrmConfig", "cboxOtherPath"
+    ConfPath2 = GetSetting(var1, "ufrmConfig", "textOther")
+    If ConfPath2 <> "" Then DeleteSetting var1, "ufrmConfig", "textOther"
+    ClicDate = GetSetting(var1, "ufrmConfig", "cboxDate")
+    If ClicDate = True Then DeleteSetting var1, "ufrmConfig", "cboxDate"
+    DateConf = GetSetting(var1, "ufrmConfig", "cmbDate")
+    If DateConf <> "" Then DeleteSetting var1, "ufrmConfig", "cmbDate"
+
+End Sub
+
+    
+Sub BackupConfigurated()
+    
 Dim sPath As String
 Dim sExt As String
 Dim sFil As String
@@ -8,11 +166,28 @@ Dim sDirection As String
 Dim Fname As String
 Dim sDate
 Dim msg1 As String
-
-Sub BackupConfigurated(ExtConf As String, DateConf As String, confPath As String)
-    
-    Dim FSO
-    ufrmConfig.Show
+Dim VerifyPath As Boolean
+Dim DateConf As String
+Dim ConfPath As String
+Dim FSO
+Dim var1 As String
+Dim DiskName As String
+Dim DeskTop As String
+    On Error GoTo ErrorHandler
+    var1 = ActiveWorkbook.CodeName
+    VerifyPath = cboxOtherPath.Value
+    DateConf = cmbDate.Value
+    sFil = ActiveWorkbook.Name
+    sFile = VBA.Mid(sFil, 1, VBA.InStr(sFil, ".x") - 1)
+    sExt = VBA.Right(sFil, Len(sFil) - WorksheetFunction.Find(".", sFil) + 1)
+    msg1 = "This workbook is not saved yet!"
+    DiskName = VBA.Left(Application.DefaultFilePath, 2)
+    DeskTop = DiskName & "\Users\" & Application.UserName & "\Desktop" & "\Backup " & sFile & "\"
+        If VerifyPath = True Then
+            ConfPath = textOther.Value
+        Else
+            ConfPath = cmbPath.Value
+        End If
     Select Case DateConf
         Case "Date and Time"
            sDate = Format(Now, "dd-mm-yy hh.mm.ss")
@@ -21,79 +196,25 @@ Sub BackupConfigurated(ExtConf As String, DateConf As String, confPath As String
         Case "Only Time"
             sDate = Format(Now, "hh.mm.ss")
     End Select
-    Select Case confPath
+    Select Case ConfPath
         Case "Documents"
-            sDirection = "Libraries\Documents" & "\Backup " & sFile & "\"
+            sDirection = Application.DefaultFilePath & "\Backup " & sFile & "\"
         Case "Beside this workbook"
             sDirection = ActiveWorkbook.Path & "\Backup " & sFile & "\"
         Case "Desktop"
-            sDirection = "Desktop" & "\Backup " & sFile & "\"
+            sDirection = DeskTop
+        Case Else
+            sDirection = GetSetting(var1, "ufrmConfig", "textOther")
     End Select
-    Select Case ExtConf
-        Case "OpenDocument Spreadsheet"
-            sExt = ".ods"
-        Case "Strict Open XML Spreadsheet"
-            sExt = ".xlsx"
-        Case "XPS Document"
-            sExt = ".xps"
-        Case "PDF"
-            sExt = ".pdf"
-        Case "Excel 97-2003 Add-in"
-            sExt = ".xla"
-        Case "Excel Add-in"
-            sExt = ".xlam"
-        Case "SYLK(Symbolic Link)"
-            sExt = ".slk"
-        Case "DIF(Data Interchange Format)"
-            sExt = ".dif"
-        Case "CSV(MS-DOS)"
-            sExt = ".csv"
-        Case "CSV(Macintosh)"
-            sExt = ".csv"
-        Case "Text(MS-DOS)"
-            sExt = ".txt"
-        Case "Text(Macintosh)"
-            sExt = ".txt"
-        Case "Formatted Text(Space Delimited)"
-            sExt = ".prn"
-        Case "CSV(Comma Delimited)"
-            sExt = ".csv"
-        Case "Microsoft Excel 5.0/95 Workbook"
-            sExt = ".xls"
-        Case "XLM Spreadsheet 2003"
-            sExt = ".xml"
-        Case "Unicode Text"
-            sExt = ".txt"
-        Case "Text(Tab Delimited)"
-            sExt = ".txt"
-        Case "Excel 97-2000 Template"
-            sExt = ".xlt"
-        Case "Excel Macro-Enabled Template"
-            sExt = ".xltm"
-        Case "Excel Template"
-            sExt = ".xltx"
-        Case "XLM Data"
-            sExt = ".xml"
-        Case "CSV UFT-8(Comma Delimited)"
-            sExt = ".csv"
-        Case "Excel 97-2003 Workbook"
-            sExt = ".xls"
-        Case "Excel Binary Workbook"
-            sExt = ".xlsb"
-        Case "Excel Macro-Enabled Workbook"
-            sExt = ".xlsm"
-        Case "Excel Workbook"
-            sExt = ".xlsx"
-    End Select
-    sFil = ActiveWorkbook.Name
-    sFile = VBA.Mid(sFil, 1, VBA.InStr(sFil, ".x") - 1)
-    Fname = sDirection & " " & sFile & "(" & sDate & ")" & sExt
-    msg1 = "This workbook is not saved yet!"
-    On Error GoTo ErrorHandler
     Set FSO = CreateObject("Scripting.FileSystemObject")
         If Not FSO.folderexists(sDirection) Then
             FSO.CreateFolder (sDirection)
         End If
+    If sDate = "" Then
+        Fname = sDirection & " " & sFile & sExt
+    Else
+        Fname = sDirection & " " & sFile & "(" & sDate & ")" & sExt
+    End If
     ActiveWorkbook.SaveCopyAs Fname
 
 ErrorHandler:
