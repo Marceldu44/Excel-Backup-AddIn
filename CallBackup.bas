@@ -204,7 +204,7 @@ Dim DeskTop As String
         Case "Desktop"
             sDirection = DeskTop
         Case Else
-            sDirection = GetSetting(var1, "ufrmConfig", "textOther")
+            sDirection = textOther.Value
     End Select
     Set FSO = CreateObject("Scripting.FileSystemObject")
         If Not FSO.folderexists(sDirection) Then
