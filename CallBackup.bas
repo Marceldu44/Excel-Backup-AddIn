@@ -67,10 +67,8 @@ Public Sub cbttOk_Click()
                 DateConf = cmbDate.Value
             End If
         End If
-    If cboxValues.Value = True Then
-        BackupConfigurated
-        SaveControls
-    End If
+    BackupConfigurated
+    If cboxValues.Value = True Then SaveControls
     End
 
 BlankSpace:
@@ -81,6 +79,10 @@ BlankSpace:
 
 End Sub
 
+
+Private Sub Frame1_Click()
+
+End Sub
 
 Private Sub UserForm_Initialize()
 
@@ -173,6 +175,7 @@ Dim FSO
 Dim var1 As String
 Dim DiskName As String
 Dim DeskTop As String
+Dim Back1 As String
     On Error GoTo ErrorHandler
     var1 = ActiveWorkbook.CodeName
     VerifyPath = cboxOtherPath.Value
@@ -182,7 +185,7 @@ Dim DeskTop As String
     sExt = VBA.Right(sFil, Len(sFil) - WorksheetFunction.Find(".", sFil) + 1)
     msg1 = "This workbook is not saved yet!"
     DiskName = VBA.Left(Application.DefaultFilePath, 2)
-    DeskTop = DiskName & "\Users\" & Application.UserName & "\Desktop" & "\Backup " & sFile & "\"
+    DeskTop = DiskName & "\Users\" & Application.UserName & "\Desktop" & "\Backup\ " & sFile & "\"
         If VerifyPath = True Then
             ConfPath = textOther.Value
         Else
@@ -198,15 +201,22 @@ Dim DeskTop As String
     End Select
     Select Case ConfPath
         Case "Documents"
-            sDirection = Application.DefaultFilePath & "\Backup " & sFile & "\"
+            Back1 = Application.DefaultFilePath & "\Backup"
+            sDirection = Application.DefaultFilePath & "\Backup\ " & sFile & "\"
         Case "Beside this workbook"
-            sDirection = ActiveWorkbook.Path & "\Backup " & sFile & "\"
+            Back1 = ActiveWorkbook.Path & "\Backup"
+            sDirection = ActiveWorkbook.Path & "\Backup\ " & sFile & "\"
         Case "Desktop"
+            Back1 = DiskName & "\Users\" & Application.UserName & "\Desktop" & "\Backup"
             sDirection = DeskTop
         Case Else
-            sDirection = textOther.Value
+            Back1 = textOther.Value & "\Backup"
+            sDirection = textOther.Value & "\Backup\ " & sFile & "\"
     End Select
     Set FSO = CreateObject("Scripting.FileSystemObject")
+        If Not FSO.folderexists(Back1) Then
+            FSO.CreateFolder (Back1)
+        End If
         If Not FSO.folderexists(sDirection) Then
             FSO.CreateFolder (sDirection)
         End If
