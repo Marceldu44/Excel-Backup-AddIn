@@ -6,9 +6,11 @@
 
 
 - Copy the file "Apollo_Backup.xlam" in the following direction:
-  C:\Users\(your user name)\AppData\Roaming\Microsoft\AddIns
- Note that the letter C sands for the disk name and can
-  change in your computer.
+
+C:\Users\(your user name)\AppData\Roaming\Microsoft\AddIns
+
+Note that the letter C sands for the disk name and can
+change in your computer.
   
 - Open Excel.
 
