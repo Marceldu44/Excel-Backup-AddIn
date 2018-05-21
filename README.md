@@ -1,8 +1,8 @@
 # Excel-Backup-AddIn
 
-#Install as an AddIn
+# Install as an AddIn
 
-##For adding the Backup tool follow the next steps:
+## For adding the Backup tool follow the next steps:
 
 
 - Copy the file "Apollo_Backup.xlam" in the following direction:
