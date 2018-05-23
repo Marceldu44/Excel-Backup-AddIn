@@ -1,11 +1,11 @@
 VERSION 5.00
 Begin {C62A69F0-16DC-11CE-9E98-00AA00574A4F} ufrmConfig 
    Caption         =   "Backup Config."
-   ClientHeight    =   3915
+   ClientHeight    =   3120
    ClientLeft      =   120
    ClientTop       =   450
    ClientWidth     =   4560
-   OleObjectBlob   =   "UserformConfig.frx":0000
+   OleObjectBlob   =   "Backup_Apollo.frx":0000
    StartUpPosition =   1  'CenterOwner
 End
 Attribute VB_Name = "ufrmConfig"
@@ -158,15 +158,15 @@ Sub DeleteControls()
     Dim ClicDate As String
     Dim var1 As String
     var1 = ActiveWorkbook.CodeName
-    ConfPath = GetSetting(var1, "ufrmConfig", "cmbPath")
+    ConfPath = GetSetting(var1, "ufrmConfig", "cmbPath", Default:="")
     If ConfPath <> "" Then DeleteSetting var1, "ufrmConfig", "cmbPath"
-    OtherPath = GetSetting(var1, "ufrmConfig", "cboxOtherPath")
+    OtherPath = GetSetting(var1, "ufrmConfig", "cboxOtherPath", Default:="")
     If OtherPath = True Then DeleteSetting var1, "ufrmConfig", "cboxOtherPath"
-    ConfPath2 = GetSetting(var1, "ufrmConfig", "textOther")
+    ConfPath2 = GetSetting(var1, "ufrmConfig", "textOther", Default:="")
     If ConfPath2 <> "" Then DeleteSetting var1, "ufrmConfig", "textOther"
-    ClicDate = GetSetting(var1, "ufrmConfig", "cboxDate")
+    ClicDate = GetSetting(var1, "ufrmConfig", "cboxDate", Default:="")
     If ClicDate = True Then DeleteSetting var1, "ufrmConfig", "cboxDate"
-    DateConf = GetSetting(var1, "ufrmConfig", "cmbDate")
+    DateConf = GetSetting(var1, "ufrmConfig", "cmbDate", Default:="")
     If DateConf <> "" Then DeleteSetting var1, "ufrmConfig", "cmbDate"
 
 End Sub
@@ -247,5 +247,4 @@ ErrorHandler:
             MsgBox msg1
     End Select
 End Sub
-
 
