@@ -5,7 +5,7 @@ Begin {C62A69F0-16DC-11CE-9E98-00AA00574A4F} ufrmConfig
    ClientLeft      =   120
    ClientTop       =   450
    ClientWidth     =   4560
-   OleObjectBlob   =   "UserformConfig.frx":0000
+   OleObjectBlob   =   "CodeUserForm.frx":0000
    StartUpPosition =   1  'CenterOwner
 End
 Attribute VB_Name = "ufrmConfig"
@@ -51,7 +51,6 @@ Private Sub cbttCancel_Click()
 End Sub
 
 Public Sub cbttOk_Click()
-
     Dim ConfPath As String
     Dim DateConf As String
     Dim ExtConf As String
@@ -81,20 +80,16 @@ Public Sub cbttOk_Click()
                 DateConf = cmbDate.Value
             End If
         End If
-    BackupConfigurated
     If cboxValues.Value = True Then SaveControls
-    End
+    BackupConfigurated
+    Unload ufrmConfig
+
 
 BlankSpace:
     If x <> 0 Then
         MsgBox "You have leave an information space in blank or have enter an invalid value!"
         x = 0
     End If
-
-End Sub
-
-
-Private Sub Frame1_Click()
 
 End Sub
 
@@ -110,10 +105,10 @@ Private Sub UserForm_Initialize()
     lblOther.Enabled = False
     cmbDate.Enabled = False
     ReadControls
-    If cmbPath.Value <> "" Or textOther.Value <> "" Then
-        BackupConfigurated
-        End
-    End If
+    If cmbPath.Value <> "" Or textOther.Value <> "" Then    '<=========es en este código que megenera el error
+        BackupConfigurated                                  '<=========trato de hacer que si el UserForm ha sido
+        Unload ufrmConfig                                   '<=========guardado antes, se haga el backup sin
+    End If                                                  '<=========necesidad de que el usuario presione el boton.
     
 End Sub
 
@@ -126,10 +121,10 @@ Sub SaveControls()
     End If
     SaveSetting var1, "ufrmConfig", "cmbPath", cmbPath.Text
     SaveSetting var1, "ufrmConfig", "cboxOtherPath", False
-    If cboxOtherPath = True Then SaveSetting var1, "ufrmConfig", "cboxOtherPath", False
+    If cboxOtherPath = True Then SaveSetting var1, "ufrmConfig", "cboxOtherPath", True
     SaveSetting var1, "ufrmConfig", "textOther", textOther.Text
     SaveSetting var1, "ufrmConfig", "cboxDate", False
-    If cboxDate = True Then SaveSetting var1, "ufrmConfig", "cboxDate", False
+    If cboxDate = True Then SaveSetting var1, "ufrmConfig", "cboxDate", True
     SaveSetting var1, "ufrmConfig", "cmbDate", cmbDate.Text
 
 End Sub
@@ -138,36 +133,25 @@ Sub ReadControls(): On Error Resume Next
 
     Dim var1 As String
     var1 = ActiveWorkbook.CodeName
-    cmbPath.Text = GetSetting(var1, "ufrmConfig", "cmbPath", Default:="")
+    cmbPath.Text = GetSetting(var1, "ufrmConfig", "cmbPath")
     cboxOtherPath = False
     If GetSetting(var1, "ufrmConfig", "cboxOtherPath") Then cboxOtherPath = True
-    textOther = GetSetting(var1, "ufrmConfig", "textOther", Default:="")
+    textOther = GetSetting(var1, "ufrmConfig", "textOther")
     cboxDate = False
     If GetSetting(var1, "ufrmConfig", "cboxDate") Then cboxDate = True
-    cmbDate.Text = GetSetting(var1, "ufrmConfig", "cmbDate", Default:="")
+    cmbDate.Text = GetSetting(var1, "ufrmConfig", "cmbDate")
     
 End Sub
 
 Sub DeleteControls()
 
-    Dim ConfPath As String
-    Dim ConfPath2 As String
-    Dim OtherPath As String
-    Dim DateConf As String
-    Dim ExtConf As String
-    Dim ClicDate As String
     Dim var1 As String
     var1 = ActiveWorkbook.CodeName
-    ConfPath = GetSetting(var1, "ufrmConfig", "cmbPath")
-    If ConfPath <> "" Then DeleteSetting var1, "ufrmConfig", "cmbPath"
-    OtherPath = GetSetting(var1, "ufrmConfig", "cboxOtherPath")
-    If OtherPath = True Then DeleteSetting var1, "ufrmConfig", "cboxOtherPath"
-    ConfPath2 = GetSetting(var1, "ufrmConfig", "textOther")
-    If ConfPath2 <> "" Then DeleteSetting var1, "ufrmConfig", "textOther"
-    ClicDate = GetSetting(var1, "ufrmConfig", "cboxDate")
-    If ClicDate = True Then DeleteSetting var1, "ufrmConfig", "cboxDate"
-    DateConf = GetSetting(var1, "ufrmConfig", "cmbDate")
-    If DateConf <> "" Then DeleteSetting var1, "ufrmConfig", "cmbDate"
+    If cmbPath.Text <> "" Then DeleteSetting var1, "ufrmConfig", "cmbPath"
+    If cboxOtherPath = True Then DeleteSetting var1, "ufrmConfig", "cboxOtherPath"
+    If textOther.Text <> "" Then DeleteSetting var1, "ufrmConfig", "textOther"
+    If cboxDate = True Then DeleteSetting var1, "ufrmConfig", "cboxDate"
+    If cmbDate.Text <> "" Then DeleteSetting var1, "ufrmConfig", "cmbDate"
 
 End Sub
 
@@ -189,7 +173,6 @@ Dim FSO
 Dim var1 As String
 Dim DiskName As String
 Dim DeskTop As String
-Dim Back1 As String
     On Error GoTo ErrorHandler
     var1 = ActiveWorkbook.CodeName
     VerifyPath = cboxOtherPath.Value
@@ -199,7 +182,7 @@ Dim Back1 As String
     sExt = VBA.Right(sFil, Len(sFil) - WorksheetFunction.Find(".", sFil) + 1)
     msg1 = "This workbook is not saved yet!"
     DiskName = VBA.Left(Application.DefaultFilePath, 2)
-    DeskTop = DiskName & "\Users\" & Application.UserName & "\Desktop" & "\Backup\ " & sFile & "\"
+    DeskTop = DiskName & "\Users\" & Application.UserName & "\Desktop" & "\Backup " & sFile & "\"
         If VerifyPath = True Then
             ConfPath = textOther.Value
         Else
@@ -215,22 +198,15 @@ Dim Back1 As String
     End Select
     Select Case ConfPath
         Case "Documents"
-            Back1 = Application.DefaultFilePath & "\Backup"
-            sDirection = Application.DefaultFilePath & "\Backup\ " & sFile & "\"
+            sDirection = Application.DefaultFilePath & "\Backup " & sFile & "\"
         Case "Beside this workbook"
-            Back1 = ActiveWorkbook.Path & "\Backup"
-            sDirection = ActiveWorkbook.Path & "\Backup\ " & sFile & "\"
+            sDirection = ActiveWorkbook.Path & "\Backup " & sFile & "\"
         Case "Desktop"
-            Back1 = DiskName & "\Users\" & Application.UserName & "\Desktop" & "\Backup"
             sDirection = DeskTop
         Case Else
-            Back1 = textOther.Value & "\Backup"
-            sDirection = textOther.Value & "\Backup\ " & sFile & "\"
+            sDirection = GetSetting(var1, "ufrmConfig", "textOther")
     End Select
     Set FSO = CreateObject("Scripting.FileSystemObject")
-        If Not FSO.folderexists(Back1) Then
-            FSO.CreateFolder (Back1)
-        End If
         If Not FSO.folderexists(sDirection) Then
             FSO.CreateFolder (sDirection)
         End If
@@ -247,5 +223,3 @@ ErrorHandler:
             MsgBox msg1
     End Select
 End Sub
-
-
